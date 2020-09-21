@@ -1,19 +1,15 @@
 package engine
 
-import (
-	"io"
-)
-
 type ParseResult struct {
-	Requests	[]Request
-	Items	[]interface{}
+	Requests []Request
+	Items    []interface{}
 }
 
 type Request struct {
-	Url 	string
-	ParserFun	func(body io.ReadCloser) ParseResult
+	Url       string
+	ParserFun func(body []byte) ParseResult
 }
 
-func NilParser(body io.ReadCloser) ParseResult  {
+func NilParser(body []byte) ParseResult {
 	return ParseResult{}
 }

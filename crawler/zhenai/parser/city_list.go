@@ -1,14 +1,14 @@
 package parser
 
 import (
+	"bytes"
 	"github.com/antchfx/htmlquery"
-	"io"
 	"learning_go/crawler/engine"
 )
 
-func ParseCityList(body io.ReadCloser) engine.ParseResult {
-	doc, err := htmlquery.Parse(body)
-	defer body.Close()
+func ParseCityList(body []byte) engine.ParseResult {
+	r := bytes.NewReader(body)
+	doc, err := htmlquery.Parse(r)
 	if err != nil {
 		panic(err)
 	}
