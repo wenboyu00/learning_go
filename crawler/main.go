@@ -2,11 +2,15 @@ package main
 
 import (
 	"learning_go/crawler/engine"
+	"learning_go/crawler/scheduler"
 	"learning_go/crawler/zhenai/parser"
 )
 
 func main() {
-	engine.Run(engine.Request{
+	e := engine.ConcurrentEngine{
+		Scheduler: &scheduler.SimpleScheduler{},
+	}
+	e.Run(engine.Request{
 		Url:       "http://www.zhenai.com/zhenghun",
 		ParserFun: parser.ParseCityList,
 	})
