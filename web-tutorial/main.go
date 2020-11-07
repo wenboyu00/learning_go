@@ -16,7 +16,10 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	httDir := http.Dir("D:\\Data\\from_github\\learning_go\\web-tutorial\\www")
-	fmt.Println(httDir)
-	http.ListenAndServe("localhost:8080", http.FileServer(httDir))
+	server := http.Server{Addr: "localhost:8080"}
+	http.HandleFunc("/process", func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
+		fmt.Fprintln(w, r.PostFormValue("first_name"))
+	})
+	server.ListenAndServe()
 }
