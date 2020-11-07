@@ -7,16 +7,17 @@ type QueuedScheduler struct {
 	workerChan  chan chan engine.Request
 }
 
+func (s *QueuedScheduler) WorkerChan() chan engine.Request {
+	// 每个worker有自己的channel
+	return make(chan engine.Request)
+}
+
 func (s *QueuedScheduler) Submit(r engine.Request) {
 	s.requestChan <- r
 }
 
 func (s *QueuedScheduler) WorkerReady(w chan engine.Request) {
 	s.workerChan <- w
-}
-
-func (s *QueuedScheduler) ConfigureMasterWorkerChan(chan engine.Request) {
-	panic("implement me")
 }
 
 // 修改结构的值，因此传指针
