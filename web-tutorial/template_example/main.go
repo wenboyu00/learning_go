@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"html/template"
+	"learning_go/web-tutorial/middleware"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -28,6 +30,7 @@ func main() {
 	http.HandleFunc("/companies", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
+			time.Sleep(4 * time.Second)
 			dec := json.NewDecoder(r.Body)
 			company := Company{}
 			err := dec.Decode(&company)
@@ -48,7 +51,8 @@ func main() {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
 	})
-	http.ListenAndServe("localhost:8080", nil)
+	http.ListenAndServe("localhost:8080", &middleware.TimeoutMiddleware{
+		Next: new(middleware.AuthMiddleware)})
 }
 
 func loadTemplates() *template.Template {
