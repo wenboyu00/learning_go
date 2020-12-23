@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"html/template"
+	"learning_go/web-tutorial/controller"
 	"learning_go/web-tutorial/middleware"
 	"log"
 	"net/http"
-	"time"
 )
 
 func main() {
@@ -27,30 +26,7 @@ func main() {
 		})
 	http.Handle("/css/", http.FileServer(http.Dir("wwwroot")))
 	http.Handle("/img/", http.FileServer(http.Dir("wwwroot")))
-	http.HandleFunc("/companies", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodPost:
-			time.Sleep(4 * time.Second)
-			dec := json.NewDecoder(r.Body)
-			company := Company{}
-			err := dec.Decode(&company)
-			if err != nil {
-				log.Println(err.Error())
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-
-			enc := json.NewEncoder(w)
-			err = enc.Encode(company)
-			if err != nil {
-				log.Println(err.Error())
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-		}
-	})
+	controller.RegisterRoutes()
 	http.ListenAndServe("localhost:8080", &middleware.TimeoutMiddleware{
 		Next: new(middleware.AuthMiddleware)})
 }
